@@ -1,0 +1,45 @@
+type User {
+  id: ID! @unique
+  username: String! @unique
+  password: String!
+  email: String! @unique
+  userClub: UserClub @relation(name: "User_UserClub", references: [id], onDelete: CASCADE)
+  friends: [Friend!]! @relation(name: "User_Friend", references: [id], onDelete: CASCADE)
+  chatRooms: [ChatRoom!]! @relation(name: "Chat_RoomUser", references: [id])
+}
+
+type Club {
+  id: ID! @unique
+  name: String!
+  userClub: [UserClub!]! @relation(name: "Club_UserClub", feilds: [userClubID], references: [id], onDelete: CASCADE)
+  email: String! @unique
+  city: String!
+}
+
+type UserClub {
+  id: ID! @unique
+  user: User! @relation(name: "User_UserClub", feilds: [userID], references: [id])
+  userID: ID!
+  club: Club! @relation(name: "Club_UserClub", feilds: [clubID], references: [id])
+  clubID: ID!
+}
+
+type Friend {
+  id: ID! @unique
+  user1: User! @relation(name: "User_Friend", feilds: [user1ID], references: [id])
+  user1ID: ID!
+  user2: User! @relation(name: "User_Friend2", feilds: [user2ID], references: [id])
+  user2ID: ID!
+}
+
+type ChatRoom {
+  id: ID! @unique
+  users: [User!]! @relation(name: "Chat_RoomUser", references: [id])
+}
+
+type Message {
+  id: ID! @unique
+  user: User! @relation(name: "Message_User", references: [id])
+  chatRoom: ChatRoom! @relation(name: "ChatRoom_Message", references: [id])
+  message: String!
+}
